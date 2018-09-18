@@ -15,6 +15,7 @@ import tensorflow as tf
 import numpy as np
 from scipy.io import savemat
 from ops import *
+from nalu.layers.nalu_layer import NaluLayer
 
 
 class FaceAging(object):
@@ -635,19 +636,16 @@ class FaceAging(object):
                 current = concat_label(
                     current, gender, int(self.num_categories / 2))
         # fully connection layer
-        name = 'D_img_fc1'
+        name = 'D_img_fc'
         current = fc(
             input_vector=tf.reshape(current, [self.size_batch, -1]),
             num_output_length=1024,
             name=name
         )
         current = lrelu(current)
-        name = 'D_img_fc2'
-        current = fc(
-            input_vector=current,
-            num_output_length=1,
-            name=name
-        )
+        name = 'D_img_nalu'
+        nalu_layer = NaluLayer(1024, 1, 64, scope=name)
+        current = nalu_layer(current)
         # output
         return tf.nn.sigmoid(current), current
 

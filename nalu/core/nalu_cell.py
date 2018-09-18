@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from core.nac_cell import NacCell
+from nalu.core.nac_cell import NacCell
 
 class NaluCell(object):
 

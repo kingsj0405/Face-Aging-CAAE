@@ -525,10 +525,14 @@ class FaceAging(object):
             duplicate = 1
         z = concat_label(z, gender, duplicate=duplicate)
         size_mini_map = int(self.size_image / 2 ** num_layers)
+        # NALU layer
+        name = 'G_nalu'
+        nalu_layer = NaluLayer(150, 150, hidden_shape=256, scope=name)
+        current = nalu_layer(z)
         # fc layer
         name = 'G_fc'
         current = fc(
-            input_vector=z,
+            input_vector=current,
             num_output_length=self.num_gen_channels * size_mini_map * size_mini_map,
             name=name
         )
@@ -644,7 +648,7 @@ class FaceAging(object):
         )
         current = lrelu(current)
         name = 'D_img_nalu'
-        nalu_layer = NaluLayer(1024, 1, 64, scope=name)
+        nalu_layer = NaluLayer(1024, 1, hidden_shape=256, scope=name)
         current = nalu_layer(current)
         # output
         return tf.nn.sigmoid(current), current

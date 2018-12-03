@@ -703,8 +703,11 @@ class FaceAging(object):
             size_frame=[size_frame, size_frame]
         )
 
-    def test(self, images, gender, name):
-        test_dir = os.path.join(self.save_dir, 'test')
+    def test(self, images, gender, name, outdir=None):
+        if outdir == None:
+            test_dir = os.path.join(self.save_dir, 'test')
+        else:
+            test_dir = outdir
         if not os.path.exists(test_dir):
             os.makedirs(test_dir)
         images = images[:int(np.sqrt(self.size_batch)), :, :, :]
@@ -741,7 +744,7 @@ class FaceAging(object):
             size_frame=[size_sample, size_sample]
         )
 
-    def custom_test(self, testing_samples_dir):
+    def custom_test(self, testing_samples_dir, outdir):
         if not self.load_checkpoint():
             print("\tFAILED >_<!")
             exit(0)
@@ -777,8 +780,8 @@ class FaceAging(object):
             gender_male[i, 0] = self.image_value_range[-1]
             gender_female[i, 1] = self.image_value_range[-1]
 
-        self.test(images, gender_male, 'test_as_male.png')
-        self.test(images, gender_female, 'test_as_female.png')
+        self.test(images, gender_male, 'test_as_male.png', outdir)
+        self.test(images, gender_female, 'test_as_female.png', outdir)
 
         print("\n\tDone! Results are saved as %s\n" %
               os.path.join(self.save_dir, 'test', 'test_as_xxx.png'))

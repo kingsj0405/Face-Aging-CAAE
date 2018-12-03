@@ -28,6 +28,7 @@ parser.add_argument('--use_trained_model', type=str2bool, default=True,
                     help='whether train from an existing model or from scratch')
 parser.add_argument('--use_init_model', type=str2bool, default=True,
                     help='whether train from the init model if cannot find an existing model')
+parser.add_argument('--outdir', type=str, default='./save/test')
 FLAGS = parser.parse_args()
 
 
@@ -66,7 +67,8 @@ def main(_):
         else:
             print('\n\tTesting Mode')
             model.custom_test(
-                testing_samples_dir=FLAGS.testdir + '/*jpg'
+                testing_samples_dir=FLAGS.testdir + '/*png',
+                outdir=FLAGS.outdir
             )
 
 
